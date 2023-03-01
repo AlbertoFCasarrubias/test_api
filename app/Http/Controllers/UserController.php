@@ -82,6 +82,32 @@ class UserController extends Controller
         return response()->json($object);
     }
 
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',                        
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 401);
+        }
+
+        $user = User::where('email', '=', $request->email)->first();
+        $valid = Hash::check($request->password, $user->password);
+
+        if (!$user) {
+            return response()->json('email is not registered',200);
+        }
+
+        if (!$valid) {
+            return response()->json('credentials are not correct',200);
+        }
+
+        $user->datos;
+        return response()->json($user);
+    }
+
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [

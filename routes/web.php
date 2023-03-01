@@ -19,6 +19,7 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix'=>'api/v1'], function() use($router){
     $router->get('/users', 'UserController@index');
+    $router->post('/login', 'UserController@login');
     $router->post('/users', 'UserController@create');
     $router->get('/users/{id}', 'UserController@show');
     $router->put('/users/{id}', 'UserController@update');
