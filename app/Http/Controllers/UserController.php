@@ -45,12 +45,12 @@ class UserController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors(), 401);
+            return response()->json($validator->errors(), 404);
         }
 
         $object = User::where('email' , $request->email)->first();
         if ($object) {
-            return response()->json('email is registered',401);
+            return response()->json('email is registered',404);
         }
 
         $object = new User();
@@ -86,7 +86,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required',                        
+            'password' => 'required'
         ]);
 
         if($validator->fails()){
@@ -94,14 +94,14 @@ class UserController extends Controller
         }
 
         $user = User::where('email', '=', $request->email)->first();
-        $valid = Hash::check($request->password, $user->password);
-
+        
         if (!$user) {
-            return response()->json('email is not registered',200);
+            return response()->json('email is not registered',401);
         }
 
+        $valid = Hash::check($request->password, $user->password);
         if (!$valid) {
-            return response()->json('credentials are not correct',200);
+            return response()->json('credentials are not correct',401);
         }
 
         $user->datos;
@@ -112,7 +112,6 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required',            
             'role' => 'required|in:admin,visitante',
             'name' => 'required',
             'birthday' => 'required',
@@ -125,7 +124,7 @@ class UserController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors(), 401);
+            return response()->json($validator->errors(), 404);
         }
 
         $object= User::find($id);
